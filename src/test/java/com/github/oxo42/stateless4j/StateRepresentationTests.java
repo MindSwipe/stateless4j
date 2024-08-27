@@ -47,7 +47,7 @@ public class StateRepresentationTests {
                 actualTransition = t;
             }
         });
-        stateRepresentation.exit(transition);
+        stateRepresentation.exit(transition, null);
         assertNull(actualTransition);
     }
 
@@ -64,7 +64,7 @@ public class StateRepresentationTests {
                 actualTransition = t;
             }
         });
-        stateRepresentation.exit(transition);
+        stateRepresentation.exit(transition, null);
         assertEquals(transition, actualTransition);
     }
 
@@ -171,7 +171,7 @@ public class StateRepresentationTests {
             }
         });
         Transition<State, Trigger> transition = new Transition<>(sub.getUnderlyingState(), superState.getUnderlyingState(), Trigger.X);
-        sub.exit(transition);
+        sub.exit(transition, null);
         assertTrue(executed);
     }
 
@@ -211,7 +211,7 @@ public class StateRepresentationTests {
             }
         });
         Transition<State, Trigger> transition = new Transition<>(superState.getUnderlyingState(), sub.getUnderlyingState(), Trigger.X);
-        superState.exit(transition);
+        superState.exit(transition, null);
         assertFalse(executed);
     }
 
@@ -251,7 +251,7 @@ public class StateRepresentationTests {
             }
         });
         Transition<State, Trigger> transition = new Transition<>(sub.getUnderlyingState(), State.C, Trigger.X);
-        sub.exit(transition);
+        sub.exit(transition, null);
         assertTrue(executed);
     }
 
@@ -304,7 +304,7 @@ public class StateRepresentationTests {
             }
         });
 
-        rep.exit(new Transition<>(State.B, State.C, Trigger.X));
+        rep.exit(new Transition<>(State.B, State.C, Trigger.X), null);
 
         assertEquals(2, actual.size());
         assertEquals(0, actual.get(0).intValue());
@@ -398,7 +398,7 @@ public class StateRepresentationTests {
             }
         });
         Transition<State, Trigger> transition = new Transition<>(sub.getUnderlyingState(), State.C, Trigger.X);
-        sub.exit(transition);
+        sub.exit(transition, null);
         assertTrue(subOrder < superOrder);
     }
 

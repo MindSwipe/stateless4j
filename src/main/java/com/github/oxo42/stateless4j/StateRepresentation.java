@@ -15,7 +15,7 @@ public class StateRepresentation<S, T> {
 
     private final Map<T, List<TriggerBehaviour<S, T>>> triggerBehaviours = new HashMap<>();
     private final List<Action2<Transition<S, T>, Object[]>> entryActions = new ArrayList<>();
-    private final List<Action1<Transition<S, T>>> exitActions = new ArrayList<>();
+    private final List<Action2<Transition<S,T>, Object[]>> exitActions = new ArrayList<>();
     private final List<StateRepresentation<S, T>> substates = new ArrayList<>();
     private StateRepresentation<S, T> superstate; // null
 
@@ -85,6 +85,11 @@ public class StateRepresentation<S, T> {
 
     public void addExitAction(Action1<Transition<S, T>> action) {
         assert action != null : ACTION_IS_NULL;
+        exitActions.add((t, a) -> action.doIt(t));
+    }
+
+    public void addExitAction(Action2<Transition<S, T>, Object[]> action) {
+        assert action != null : ACTION_IS_NULL;
         exitActions.add(action);
     }
 
@@ -102,15 +107,15 @@ public class StateRepresentation<S, T> {
         }
     }
 
-    public void exit(Transition<S, T> transition) {
+    public void exit(Transition<S, T> transition, Object[] args) {
         assert transition != null : TRANSITION_IS_NULL;
 
         if (transition.isReentry()) {
-            executeExitActions(transition);
+            executeExitActions(transition, args);
         } else if (!includes(transition.getDestination())) {
-            executeExitActions(transition);
+            executeExitActions(transition, args);
             if (superstate != null) {
-                superstate.exit(transition);
+                superstate.exit(transition, args);
             }
         }
     }
@@ -123,10 +128,10 @@ public class StateRepresentation<S, T> {
         }
     }
 
-    void executeExitActions(Transition<S, T> transition) {
+    void executeExitActions(Transition<S, T> transition, Object[] args) {
         assert transition != null : TRANSITION_IS_NULL;
-        for (Action1<Transition<S, T>> action : exitActions) {
-            action.doIt(transition);
+        for (Action2<Transition<S, T>, Object[]> action : exitActions) {
+            action.doIt(transition, args);
         }
     }
 

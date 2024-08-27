@@ -235,7 +235,7 @@ public class StateMachine<S, T> {
             S destination = triggerBehaviour.transitionsTo(source, args);
             Transition<S, T> transition = new Transition<>(source, destination, trigger);
             
-            getCurrentRepresentation().exit(transition);
+            getCurrentRepresentation().exit(transition, args);
             triggerBehaviour.performAction(args);
             setState(destination);
             getCurrentRepresentation().enter(transition, args);
